@@ -50,8 +50,14 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="SerialDeviceTests\UnitTest1.cs" />
+    <Compile Include="SerialDeviceTests\SerialDeviceFactoryTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\KA3005P.Proxy\KA3005P.Proxy.csproj">
+      <Project>{977CB117-99BA-40C5-9848-38AA45CB22B3}</Project>
+      <Name>KA3005P.Proxy</Name>
+    </ProjectReference>
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
