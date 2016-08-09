@@ -1,25 +1,71 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO.Ports;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace KA3005P.Proxy
 {
-    public class SerialDevice
+    public abstract class SerialDevice : IDisposable
     {
-        private readonly SerialPort port = null;
-        public SerialDevice(string name)
+        private const string CMD_IDENTIFY = "*IDN?";
+        private SerialPort port = null;
+        public virtual string Name => null;
+        public SerialDevice()
         {
-            if(string.IsNullOrWhiteSpace(name))
-                throw new ArgumentException("Invalid port name", nameof(name));
-            this.port = new SerialPort(name, 9600, Parity.None)
+            if (string.IsNullOrWhiteSpace(this.Name))
+                throw new ArgumentException("Invalid device name", nameof(this.Name));
+            return;
+        }      
+        public bool Connect(string port_name)
+        {
+            if (string.IsNullOrWhiteSpace(port_name))
+                throw new ArgumentException("Invalid port name", nameof(port_name));
+            bool success = false;
+            this.port = new SerialPort(port_name, 9600, Parity.None)
             {
                 DataBits = 8,
-                StopBits = StopBits.One
+                StopBits = StopBits.One,
             };
+            this.port.Open();
+            success = this.Validate();
+            if(!success)
+                this.Dispose();
+            return success;
+        }
+        public void Dispose()
+        {
+            if (this.port?.IsOpen ?? false)
+                this.port.Close();
             return;
+        }
+        public string Identify()
+        {
+            return this.Query(SerialDevice.CMD_IDENTIFY);
+        }
+        public string GetText()
+        {
+            return this.port.BytesToRead > 0 ? this.port.ReadExisting()?.TrimEnd(new char[] { '\0', ' ' }) : null;
+        }
+        public string Query(string text)
+        {
+            this.SendCommand(text);
+            System.Threading.Thread.Sleep(100);
+            return this.GetText();
+        }
+        public void SendCommand(string text)
+        {
+            this.port.Write(text);
+            return;
+        }
+        public void SendCommand(string format_string, params string[] values)
+        {
+            this.port.Write(string.Format(format_string, values));
+            return;
+        }
+        private bool Validate()
+        {
+            if (!this.port?.IsOpen ?? true)
+                return false;
+            string name = this.Identify();
+            return this.Name == name;
         }
     }
 }

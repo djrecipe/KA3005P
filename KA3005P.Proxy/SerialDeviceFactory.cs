@@ -13,16 +13,19 @@ namespace KA3005P.Proxy
         {
 
         }
-        public SerialDevice Create(string name)
-        {
-            List<string> ports = this.Enumerate();
-            if (!ports.Contains(name))
-                return null;
-            return new SerialDevice(name);
-        }
         public List<string> Enumerate()
         {
             return SerialPort.GetPortNames().ToList();
+        }
+        public T Find<T>() where T: SerialDevice, new()
+        {
+            foreach(string port in this.Enumerate())
+            {
+                T device = new T();
+                if (device.Connect(port))
+                    return device;
+            }
+            return null;
         }
     }
 }

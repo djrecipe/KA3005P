@@ -27,8 +27,22 @@ namespace KA3005P.UI
         }
         public MainWindow()
         {
-            this.Model = new MainWindowModel();
             this.InitializeComponent();
+        }
+
+        private void MainWindow_Loaded(object sender, RoutedEventArgs e)
+        {
+            this.Model = new MainWindowModel();
+            this.DataContext = this.Model;
+        }
+
+        private void btnSetVoltage_Click(object sender, RoutedEventArgs e)
+        {
+            double value = 0.0;
+            if(double.TryParse(this.txtSetVoltageValue.Text, out value))
+            {
+                this.Model.Voltage = value;
+            }
         }
     }
 }

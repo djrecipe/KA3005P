@@ -42,6 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Korad.cs" />
     <Compile Include="SerialDevice.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SerialDeviceFactory.cs" />
