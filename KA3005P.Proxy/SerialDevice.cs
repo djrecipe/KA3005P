@@ -8,6 +8,11 @@ namespace KA3005P.Proxy
         private const string CMD_IDENTIFY = "*IDN?";
         private SerialPort port = null;
         public virtual string Name => null;
+        public string PortName
+        {
+            get;
+            private set;
+        } = null;
         public SerialDevice()
         {
             if (string.IsNullOrWhiteSpace(this.Name))
@@ -24,6 +29,7 @@ namespace KA3005P.Proxy
                 DataBits = 8,
                 StopBits = StopBits.One,
             };
+            this.PortName = port_name;
             this.port.Open();
             success = this.Validate();
             if(!success)
@@ -47,17 +53,20 @@ namespace KA3005P.Proxy
         public string Query(string text)
         {
             this.SendCommand(text);
+            string result = this.GetText();
             System.Threading.Thread.Sleep(100);
-            return this.GetText();
+            return result;
         }
         public void SendCommand(string text)
         {
             this.port.Write(text);
+            System.Threading.Thread.Sleep(100);
             return;
         }
         public void SendCommand(string format_string, params string[] values)
         {
             this.port.Write(string.Format(format_string, values));
+            System.Threading.Thread.Sleep(100);
             return;
         }
         private bool Validate()

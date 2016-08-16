@@ -44,5 +44,23 @@ namespace KA3005P.UI
                 this.Model.Voltage = value;
             }
         }
+
+        private void btnOutputEnabled_Click(object sender, RoutedEventArgs e)
+        {
+            this.Model.OutputEnabled = !this.Model.OutputEnabled;
+            return;
+        }
+
+        private void mnuitmRefresh_Click(object sender, RoutedEventArgs e)
+        {
+            this.Model.UpdateStatus();
+            return;
+        }
+
+        private void mnuitmReconnect_Click(object sender, RoutedEventArgs e)
+        {
+            this.Model.ConnectKorad();
+            return;
+        }
     }
 }
