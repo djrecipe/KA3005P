@@ -7,7 +7,11 @@ namespace KA3005P.UI
 {
     internal class MainWindowModel : INotifyPropertyChanged
     {
+        #region Instance Members
+        private readonly SerialDeviceFactory factory = new SerialDeviceFactory();
         private Korad korad = null;
+        #endregion
+        #region Instance Properties
         public bool Connected => this.korad != null;
         public string ConnectionStatusText => this.Connected ? string.Format("{0} {1}", this.korad.Name, this.korad.PortName) : "Not Connected";
         public string OutputEnabledButtonText => (this.korad?.OutputEnabled ?? false) ? "Turn Off" : "Turn On";
@@ -41,26 +45,21 @@ namespace KA3005P.UI
                 this.OnPropertyChanged("Voltage");
             }
         }
+        #endregion
+        #region Instance Methods
         internal MainWindowModel()
         {
+            this.factory.DeviceFound += this.SerialDeviceFactory_DeviceFound;
             this.ConnectKorad();
         }
         public void ConnectKorad()
         {
-            SerialDeviceFactory factory = new SerialDeviceFactory();
             if (this.korad != null)
             {
                 this.korad.Dispose();
                 this.korad = null;
             }
-            this.korad = factory.Find<Korad>();
-            if (this.korad != null)
-            {
-                this.korad.Initialize();
-                this.UpdateStatus();
-            }
-            this.OnPropertyChanged("Connected");
-            this.OnPropertyChanged("ConnectionStatusText");
+            this.factory.Find<Korad>();
             return;
         }
         public void UpdateStatus()
@@ -82,6 +81,22 @@ namespace KA3005P.UI
         protected virtual void OnPropertyChanged([CallerMemberName] string property_name = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(property_name));
+            return;
         }
+        #endregion
+        #region Instance Events
+        private void SerialDeviceFactory_DeviceFound(SerialDevice device)
+        {
+            this.korad = device as Korad;
+            if (this.korad != null)
+            {
+                this.korad.Initialize();
+                this.UpdateStatus();
+            }
+            this.OnPropertyChanged("Connected");
+            this.OnPropertyChanged("ConnectionStatusText");
+            return;
+        }
+        #endregion
     }
 }

@@ -3,6 +3,7 @@ using System.IO.Ports;
 
 namespace KA3005P.Proxy
 {
+    public delegate void SerialDeviceDelegate(SerialDevice device);
     public abstract class SerialDevice : IDisposable
     {
         private const string CMD_IDENTIFY = "*IDN?";

@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace KA3005P.Proxy
 {
     public class Korad : SerialDevice
     {
+        #region Types
         [Flags]
         public enum StatusBits : int
         {
@@ -24,12 +21,18 @@ namespace KA3005P.Proxy
             Voltage = 0,
             Current = 1
         }
+        #endregion
+        #region Instance Members
+        #region Constants
         private const string CMD_SETBEEP = "BEEP{0}";
         private const string CMD_GETSTATUS= "STATUS?";
         private const string CMD_SETOUTPUTENABLE = "OUT{0}";
         private const string CMD_GETVOLTAGE = "VSET1?";
         private const string CMD_SETVOLTAGE = "VSET1:{0}";
+        #endregion
         private StatusBits statusBits;
+        #endregion
+        #region Instance Properties
         public bool BeepEnabled => this.statusBits.HasFlag(StatusBits.BeepEnabled);
         public override string Name => "KORADKA3005PV2.0";
         public bool LockEnabled => this.statusBits.HasFlag(StatusBits.LockEnabled);
@@ -37,6 +40,8 @@ namespace KA3005P.Proxy
         public double MaximumVoltage => 30.0;
         public bool OutputEnabled => this.statusBits.HasFlag(StatusBits.OutputEnabled);
         public OutputModes OutputMode => this.statusBits.HasFlag(StatusBits.Ch1CVMode) ? OutputModes.Voltage : OutputModes.Current;
+        #endregion
+        #region Instance Methods
         public Korad() : base()
         {
         }
@@ -81,5 +86,6 @@ namespace KA3005P.Proxy
             this.statusBits = (StatusBits) (text == null ? 0 : text[0]);  
             return;
         }
+        #endregion
     }
 }
