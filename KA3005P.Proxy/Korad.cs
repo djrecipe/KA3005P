@@ -74,9 +74,11 @@ namespace KA3005P.Proxy
         }
         public void UpdateStatus()
         {
-            // TODO 08/16/16: there is an issue deciphering the status bits whenever OVP or OCP are enabled
+            // TODO 08/16/16: there is an issue deciphering the status bits whenever OVP or OCP are enabled (OVP is worse)
             string text = this.Query(Korad.CMD_GETSTATUS);
-            this.statusBits = (StatusBits) (text == null ? 0 : text[0]);
+            int value = text.Length > 0 ? text[0] : -1;
+            Console.WriteLine("Status: {0}", value);
+            this.statusBits = (StatusBits) (text == null ? 0 : text[0]);  
             return;
         }
     }

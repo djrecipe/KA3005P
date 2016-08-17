@@ -5,56 +5,97 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:KA3005P.UI"
         mc:Ignorable="d"
-        Title="Korad KA3005P Power Supply" Height="280" Width="460" Loaded="MainWindow_Loaded" MinWidth="460" MinHeight="280">
+        Title="Korad KA3005P Power Supply" Height="360" Width="393" Loaded="MainWindow_Loaded" Closing="MainWindow_Closing" ResizeMode="NoResize">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="40"/>
+            <RowDefinition Height="1.25*"/>
             <RowDefinition/>
-            <RowDefinition/>
-            <RowDefinition/>
-            <RowDefinition/>
-            <RowDefinition/>
-            <RowDefinition/>
-            <RowDefinition/>
-            <RowDefinition/>
-            <RowDefinition/>
-            <RowDefinition Height="30"/>
+            <RowDefinition Height="40"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="2*"/>
-            <ColumnDefinition Width="2*"/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-        <TextBox x:Name="txtSetVoltageValue" Margin="40,0" TextWrapping="Wrap" Grid.Column="1" VerticalContentAlignment="Center" Grid.Row="5"/>
-        <Button x:Name="btnSetVoltage" Content="Set" IsEnabled="{Binding Connected, Mode=OneWay}" Margin="20,0" Click="btnSetVoltage_Click" Grid.Column="2" Grid.Row="5" Padding="1" Background="#FFDCE6FF"/>
-        <Label x:Name="lblVoltage" HorizontalAlignment="Left" Margin="133,1,-53,0" VerticalAlignment="Top" Grid.Column="2" Height="10" Width="10" Grid.Row="10"/>
-        <Label x:Name="lblCurrentVoltage" Content="Current Voltage:" RenderTransformOrigin="-2.042,-4.239" Margin="20,0" Grid.Row="2" VerticalContentAlignment="Center" Padding="0"/>
-        <Label x:Name="lblSetVoltage" Content="Set Voltage:" RenderTransformOrigin="-2.042,-4.239" Margin="20,0" Grid.Row="5" VerticalContentAlignment="Center" Padding="0"/>
-        <TextBox x:Name="txtCurrentVoltageValue" Text="{Binding Voltage, Mode=OneWay}" Margin="40,0" TextWrapping="Wrap" Grid.Column="1" IsReadOnly="True" VerticalContentAlignment="Center" Grid.Row="2" Background="#FFDADADA" Padding="10,0"/>
-        <Button x:Name="btnOutputEnabled" Content="{Binding OutputEnabledButtonText, Mode=OneWay}" IsEnabled="{Binding Connected, Mode=OneWay}" Margin="20,0" Click="btnOutputEnabled_Click" Grid.Column="2" Grid.Row="8" Background="#FFDCE6FF"/>
-        <Label x:Name="lblOutputEnabled" Content="Output Enabled:" RenderTransformOrigin="-2.042,-4.239" Margin="20,0" Grid.Row="8" VerticalContentAlignment="Center" Padding="0"/>
-        <TextBox x:Name="txtOutputEnabled" Text="{Binding OutputEnabledStatus, Mode=OneWay}" Margin="40,0" TextWrapping="Wrap" Grid.Column="1" VerticalContentAlignment="Center" Grid.Row="8" IsReadOnly="True" Background="#FFDADADA" Padding="10,0"/>
-        <Menu x:Name="menu" Grid.ColumnSpan="3">
-            <MenuItem x:Name="mnuitmReconnect" Header="Reconnect" Margin="10,7,5,0" Padding="5,3" Click="mnuitmReconnect_Click" Background="#FFDCE6FF">
-                <MenuItem.BorderBrush>
-                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                        <GradientStop Color="Black" Offset="0"/>
-                        <GradientStop Color="#FF787878" Offset="1"/>
-                    </LinearGradientBrush>
-                </MenuItem.BorderBrush>
+        <Menu x:Name="menu">
+            <MenuItem x:Name="mnuitmReconnect" Header="Reconnect" Margin="10,7,5,0" Padding="5,3" Click="mnuitmReconnect_Click" BorderBrush="#FF9B9B9B" BorderThickness="2,1,1,1">
+                <MenuItem.Background>
+                    <RadialGradientBrush>
+                        <GradientStop Color="White"/>
+                        <GradientStop Color="#FFD9DBEC" Offset="1"/>
+                    </RadialGradientBrush>
+                </MenuItem.Background>
             </MenuItem>
-            <MenuItem x:Name="mnuitmRefresh" IsEnabled="{Binding Connected, Mode=OneWay}" Header="Refresh" Height="25" Click="mnuitmRefresh_Click" Padding="5,3" HorizontalAlignment="Center" HorizontalContentAlignment="Center" VerticalAlignment="Center" Margin="5,7,0,0" Background="#FFDCE6FF">
-                <MenuItem.BorderBrush>
-                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                        <GradientStop Color="Black" Offset="0"/>
-                        <GradientStop Color="#FF787878" Offset="1"/>
-                    </LinearGradientBrush>
-                </MenuItem.BorderBrush>
+            <MenuItem x:Name="mnuitmRefresh" IsEnabled="{Binding Connected, Mode=OneWay}" Header="Refresh" Height="25" Click="mnuitmRefresh_Click" Padding="5,3" HorizontalAlignment="Center" HorizontalContentAlignment="Center" VerticalAlignment="Center" Margin="5,7,0,0" BorderBrush="#FF9B9B9B" BorderThickness="2,1,1,1">
+                <MenuItem.Background>
+                    <RadialGradientBrush>
+                        <GradientStop Color="White"/>
+                        <GradientStop Color="#FFD9DBEC" Offset="1"/>
+                    </RadialGradientBrush>
+                </MenuItem.Background>
             </MenuItem>
         </Menu>
-        <StatusBar x:Name="barStatus" Grid.ColumnSpan="3" Grid.Row="10" Margin="0,0,1,0">
-            <StatusBarItem x:Name="lblConnectionStatus" Content="{Binding ConnectionStatusText}" Padding="3" Width="210" HorizontalAlignment="Left" Margin="10,0,0,0"/>
-            <StatusBarItem x:Name="statusOutput" Content="{Binding OutputModeText}" HorizontalAlignment="Right" Width="120" HorizontalContentAlignment="Right" Margin="0,0,10,0"/>
+        <StatusBar x:Name="barStatus" Grid.Row="3" Margin="0">
+            <StatusBarItem x:Name="lblConnectionStatus" Content="{Binding ConnectionStatusText}" Padding="3" Width="210" HorizontalAlignment="Left" Margin="20,0,0,0" FontWeight="SemiBold"/>
+            <StatusBarItem x:Name="statusOutput" Content="{Binding OutputModeText}" HorizontalAlignment="Right" Width="120" HorizontalContentAlignment="Right" Margin="0,0,20,0" FontStyle="Italic" Padding="3"/>
         </StatusBar>
+        <GroupBox x:Name="groupVoltage" Header="Voltage Control" Margin="20,20,20,10" FontSize="14" Grid.Row="1" FontWeight="Bold">
+            <GroupBox.BorderBrush>
+                <LinearGradientBrush EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0">
+                    <GradientStop Color="#FF5160A0" Offset="0"/>
+                    <GradientStop Color="#FF666565" Offset="1"/>
+                </LinearGradientBrush>
+            </GroupBox.BorderBrush>
+            <Grid x:Name="gridVoltageControl" Margin="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="120"/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="80"/>
+                </Grid.ColumnDefinitions>
+                <Label x:Name="lblCurrentVoltage" Content="Current Voltage:" RenderTransformOrigin="-2.042,-4.239" Margin="0,0,0,4.5" VerticalContentAlignment="Center" Padding="10,5" FontSize="12" FontWeight="Normal"/>
+                <TextBox x:Name="txtSetVoltageValue" Margin="10,5" TextWrapping="Wrap" VerticalContentAlignment="Center" Grid.Column="1" Grid.Row="1" FontSize="12" FontWeight="Light" Padding="10,5"/>
+                <Label x:Name="lblSetVoltage" Content="Set Voltage:" RenderTransformOrigin="-2.042,-4.239" Margin="10,5,108,3" VerticalContentAlignment="Center" Padding="0" Grid.ColumnSpan="2" Grid.Row="1" FontSize="12" FontWeight="Normal"/>
+                <TextBox x:Name="txtCurrentVoltageValue" Text="{Binding Voltage, Mode=OneWay}" Margin="10,5" TextWrapping="Wrap" IsReadOnly="True" VerticalContentAlignment="Center" Background="#FFDADADA" Padding="10,5" Grid.Column="1" FontSize="12" FontWeight="Light"/>
+                <Button x:Name="btnSetVoltage" Content="Set" IsEnabled="{Binding Connected, Mode=OneWay}" Margin="10,5" Click="btnSetVoltage_Click" Grid.Column="2" Grid.Row="1" Padding="1" FontSize="12" FontWeight="Normal" BorderBrush="#FF9B9B9B" BorderThickness="2,1,1,1">
+                    <Button.Background>
+                        <RadialGradientBrush>
+                            <GradientStop Color="White"/>
+                            <GradientStop Color="#FFD9DBEC" Offset="1"/>
+                        </RadialGradientBrush>
+                    </Button.Background>
+                </Button>
+            </Grid>
+        </GroupBox>
+        <GroupBox x:Name="groupOutputControl" Header="Output Control" Margin="20,10,20,20" FontSize="14" Grid.Row="2" FontWeight="Bold">
+            <GroupBox.BorderBrush>
+                <LinearGradientBrush EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0">
+                    <GradientStop Color="#FF5160A0" Offset="0"/>
+                    <GradientStop Color="#FF666565" Offset="1"/>
+                </LinearGradientBrush>
+            </GroupBox.BorderBrush>
+            <Grid x:Name="gridOutputControl" Margin="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="120"/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="80"/>
+                </Grid.ColumnDefinitions>
+                <Label x:Name="lblOutputEnabled" Content="Output Enabled:" RenderTransformOrigin="-2.042,-4.239" VerticalContentAlignment="Center" Padding="0" FontSize="12" FontWeight="Normal" Margin="10,5"/>
+                <TextBox x:Name="txtOutputEnabled" Text="{Binding OutputEnabledStatus, Mode=OneWay}" Margin="10" TextWrapping="Wrap" Grid.Column="1" VerticalContentAlignment="Center" IsReadOnly="True" Background="#FFDADADA" Padding="10,5" FontSize="12" FontWeight="Light"/>
+                <Button x:Name="btnOutputEnabled" Content="{Binding OutputEnabledButtonText, Mode=OneWay}" IsEnabled="{Binding Connected, Mode=OneWay}" Margin="10" Click="btnOutputEnabled_Click" Grid.Column="2" Grid.RowSpan="2" FontSize="12" FontWeight="Normal" BorderBrush="#FF9B9B9B" BorderThickness="2,1,1,1">
+                    <Button.Background>
+                        <RadialGradientBrush>
+                            <GradientStop Color="White" Offset="0"/>
+                            <GradientStop Color="#FFD9DBEC" Offset="1"/>
+                        </RadialGradientBrush>
+                    </Button.Background>
+                </Button>
+            </Grid>
+        </GroupBox>
     </Grid>
 </Window>
