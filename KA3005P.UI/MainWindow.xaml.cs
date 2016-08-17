@@ -34,6 +34,11 @@ namespace KA3005P.UI
             this.Model.OutputEnabled = !this.Model.OutputEnabled;
             return;
         }
+        private void MainWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            this.Model.OutputEnabled = false;
+            return;
+        }
 
         private void mnuitmRefresh_Click(object sender, RoutedEventArgs e)
         {
@@ -47,9 +52,5 @@ namespace KA3005P.UI
             return;
         }
 
-        private void MainWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-
-        }
     }
 }

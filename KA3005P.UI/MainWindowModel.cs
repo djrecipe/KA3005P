@@ -48,12 +48,18 @@ namespace KA3005P.UI
         public void ConnectKorad()
         {
             SerialDeviceFactory factory = new SerialDeviceFactory();
+            if (this.korad != null)
+            {
+                this.korad.Dispose();
+                this.korad = null;
+            }
             this.korad = factory.Find<Korad>();
             if (this.korad != null)
             {
                 this.korad.Initialize();
                 this.UpdateStatus();
             }
+            this.OnPropertyChanged("Connected");
             this.OnPropertyChanged("ConnectionStatusText");
             return;
         }

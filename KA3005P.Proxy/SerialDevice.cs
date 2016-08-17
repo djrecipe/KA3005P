@@ -76,5 +76,9 @@ namespace KA3005P.Proxy
             string name = this.Identify();
             return this.Name == name;
         }
+        ~SerialDevice()
+        {
+            this.Dispose();
+        }
     }
 }
