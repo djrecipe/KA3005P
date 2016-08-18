@@ -13,7 +13,7 @@ namespace KA3005P.UI
         #endregion
         #region Instance Properties
         public bool Connected => this.korad != null;
-        public string ConnectionStatusText => this.Connected ? string.Format("{0} {1}", this.korad.Name, this.korad.PortName) : "Not Connected";
+        public string ConnectionStatusText => this.Connected ? string.Format("{0}, {1}", this.korad.Name, this.korad.PortName) : "Not Connected";
         public string OutputEnabledButtonText => this.OutputEnabled ? "Turn Off" : "Turn On";
         public string OutputEnabledStatus => this.OutputEnabled ? "ENABLED" : "DISABLED";
         public bool OutputEnabled

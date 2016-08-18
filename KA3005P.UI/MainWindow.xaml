@@ -86,7 +86,20 @@
                     <ColumnDefinition Width="80"/>
                 </Grid.ColumnDefinitions>
                 <Label x:Name="lblOutputEnabled" Content="Output Enabled:" RenderTransformOrigin="-2.042,-4.239" VerticalContentAlignment="Center" Padding="0" FontSize="12" FontWeight="Normal" Margin="10,5"/>
-                <TextBox x:Name="txtOutputEnabled" Text="{Binding OutputEnabledStatus, Mode=OneWay}" Margin="10" TextWrapping="Wrap" Grid.Column="1" VerticalContentAlignment="Center" IsReadOnly="True" Background="#FFDADADA" Padding="10,5" FontSize="12" FontWeight="Light"/>
+                <TextBox x:Name="txtOutputEnabled" Text="{Binding OutputEnabledStatus, Mode=OneWay}" Margin="10" TextWrapping="Wrap" Grid.Column="1" VerticalContentAlignment="Center" IsReadOnly="True" Padding="10,5" FontSize="12" FontWeight="Light">
+                    <TextBox.Style>
+                        <Style>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding OutputEnabled}" Value="true">
+                                    <Setter Property="TextBox.Background" Value="LightGreen"></Setter>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding OutputEnabled}" Value="false">
+                                    <Setter Property="TextBox.Background" Value="#FFDADADA"></Setter>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBox.Style>
+                </TextBox>
                 <Button x:Name="btnOutputEnabled" Content="{Binding OutputEnabledButtonText, Mode=OneWay}" IsEnabled="{Binding Connected, Mode=OneWay}" Margin="10" Click="btnOutputEnabled_Click" Grid.Column="2" Grid.RowSpan="2" FontSize="12" FontWeight="Normal" BorderBrush="#FF9B9B9B" BorderThickness="2,1,1,1">
                     <Button.Background>
                         <RadialGradientBrush>

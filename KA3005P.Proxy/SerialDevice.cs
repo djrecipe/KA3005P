@@ -6,14 +6,21 @@ namespace KA3005P.Proxy
     public delegate void SerialDeviceDelegate(SerialDevice device);
     public abstract class SerialDevice : IDisposable
     {
+        #region Static Members
         private const string CMD_IDENTIFY = "*IDN?";
+        #endregion
+        #region Instance Members
         private SerialPort port = null;
+        #endregion
+        #region Instance Properties
         public virtual string Name => null;
         public string PortName
         {
             get;
             private set;
         } = null;
+        #endregion
+        #region Instance Methods
         public SerialDevice()
         {
             if (string.IsNullOrWhiteSpace(this.Name))
@@ -75,10 +82,13 @@ namespace KA3005P.Proxy
         {
             this.Dispose();
         }
+        #endregion
+        #region Instance Events
         private void SerialPort_DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
             this.HandleData(this.port.BytesToRead);
             return;
         }
+        #endregion
     }
 }
