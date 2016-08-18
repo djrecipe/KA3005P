@@ -14,35 +14,29 @@ namespace KA3005P.UI
         #region Instance Properties
         public bool Connected => this.korad != null;
         public string ConnectionStatusText => this.Connected ? string.Format("{0} {1}", this.korad.Name, this.korad.PortName) : "Not Connected";
-        public string OutputEnabledButtonText => (this.korad?.OutputEnabled ?? false) ? "Turn Off" : "Turn On";
-        public string OutputEnabledStatus => this.korad.OutputEnabled ? "ENABLED" : "DISABLED";
-        private bool _OutputEnabled = false;
+        public string OutputEnabledButtonText => this.OutputEnabled ? "Turn Off" : "Turn On";
+        public string OutputEnabledStatus => this.OutputEnabled ? "ENABLED" : "DISABLED";
         public bool OutputEnabled
         {
             get
             {
-                return this._OutputEnabled;
+                return this.korad?.OutputEnabled ?? false;
             }
             set
             {
-                this._OutputEnabled = this.korad.SetOutputEnabled(value);
-                this.OnPropertyChanged("OutputEnabled");
-                this.OnPropertyChanged("OutputEnabledButtonText");
-                this.OnPropertyChanged("OutputEnabledStatus");
+                this.korad?.SetOutputEnabled(value);               
             }
         }
-        public string OutputModeText => this.korad.OutputMode.ToString();
-        private double _Voltage = 0.0;
+        public string OutputModeText => this.korad?.OutputMode.ToString();
         public double Voltage
         {
             get
             {
-                return this._Voltage;
+                return this.korad?.CurrentVoltage ?? 0.0;
             }
             set
             {
-                this._Voltage = this.korad.SetVoltage(value);
-                this.OnPropertyChanged("Voltage");
+                this.korad?.SetVoltage(value);
             }
         }
         #endregion
@@ -58,6 +52,8 @@ namespace KA3005P.UI
             {
                 this.korad.Dispose();
                 this.korad = null;
+                this.OnPropertyChanged("Connected");
+                this.OnPropertyChanged("ConnectionStatusText");
             }
             this.factory.Find<Korad>();
             return;
@@ -67,13 +63,7 @@ namespace KA3005P.UI
             if (this.korad == null)
                 return;
             this.korad.UpdateStatus();
-            this._Voltage = this.korad.GetVoltage();
-            this._OutputEnabled = this.korad.OutputEnabled;
-            this.OnPropertyChanged("Voltage");
-            this.OnPropertyChanged("OutputEnabled");
-            this.OnPropertyChanged("OutputEnabledButtonText");
-            this.OnPropertyChanged("OutputEnabledStatus");
-            this.OnPropertyChanged("OutputModeText");
+            this.korad.GetVoltage();
             return;
         }
         public event PropertyChangedEventHandler PropertyChanged;
@@ -84,17 +74,30 @@ namespace KA3005P.UI
             return;
         }
         #endregion
-        #region Instance Events
+        #region Instance Events   
+        private void Korad_StatusUpdated()
+        {
+            this.OnPropertyChanged("OutputEnabled");
+            this.OnPropertyChanged("OutputEnabledButtonText");
+            this.OnPropertyChanged("OutputEnabledStatus");
+            this.OnPropertyChanged("OutputModeText");
+        }
+        private void Korad_VoltageUpdated(double value)
+        {
+            this.OnPropertyChanged("Voltage");
+        }
         private void SerialDeviceFactory_DeviceFound(SerialDevice device)
         {
             this.korad = device as Korad;
+            this.OnPropertyChanged("Connected");
+            this.OnPropertyChanged("ConnectionStatusText");
             if (this.korad != null)
             {
+                this.korad.StatusUpdated += this.Korad_StatusUpdated;
+                this.korad.VoltageUpdated += this.Korad_VoltageUpdated;
                 this.korad.Initialize();
                 this.UpdateStatus();
             }
-            this.OnPropertyChanged("Connected");
-            this.OnPropertyChanged("ConnectionStatusText");
             return;
         }
         #endregion

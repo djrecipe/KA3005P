@@ -1,10 +1,19 @@
 ﻿using System;
+using System.Threading;
 
 namespace KA3005P.Proxy
 {
+    public delegate void VoidDelegate();
+    public delegate void DoubleDelegate(double value);
     public class Korad : SerialDevice
     {
         #region Types
+        private enum Actions : int
+        {
+            None = 0,
+            GetStatus = 1,
+            GetVoltage = 2
+        }
         [Flags]
         public enum StatusBits : int
         {
@@ -30,27 +39,104 @@ namespace KA3005P.Proxy
         private const string CMD_GETVOLTAGE = "VSET1?";
         private const string CMD_SETVOLTAGE = "VSET1:{0}";
         #endregion
-        private StatusBits statusBits;
+        private readonly Mutex mutHandleData = new Mutex(false, "Korad.HandleData");
+        public event VoidDelegate StatusUpdated;
+        public event DoubleDelegate VoltageUpdated;
         #endregion
         #region Instance Properties
-        public bool BeepEnabled => this.statusBits.HasFlag(StatusBits.BeepEnabled);
+        private Actions Action { get;set; }
+        public bool BeepEnabled => this.Status.HasFlag(StatusBits.BeepEnabled);
+        private double _CurrentVoltage = 0.0;
+        public double CurrentVoltage
+        {
+            get
+            {
+                double value = 0.0;
+                if (this.mutHandleData.WaitOne(TimeSpan.FromSeconds(5.0)))
+                {
+                    value = this._CurrentVoltage;
+                    this.mutHandleData.ReleaseMutex();
+                }
+                return value;
+            }
+            set
+            {
+                if(this.mutHandleData.WaitOne((TimeSpan.FromSeconds(5.0))))
+                {
+                    this._CurrentVoltage = value;
+                    this.mutHandleData.ReleaseMutex();
+                }
+                return;
+            }
+        }
         public override string Name => "KORADKA3005PV2.0";
-        public bool LockEnabled => this.statusBits.HasFlag(StatusBits.LockEnabled);
+        public bool LockEnabled => this.Status.HasFlag(StatusBits.LockEnabled);
         public double MinimumVoltage => 0.0;
         public double MaximumVoltage => 30.0;
-        public bool OutputEnabled => this.statusBits.HasFlag(StatusBits.OutputEnabled);
-        public OutputModes OutputMode => this.statusBits.HasFlag(StatusBits.Ch1CVMode) ? OutputModes.Voltage : OutputModes.Current;
+        public bool OutputEnabled => this.Status.HasFlag(StatusBits.OutputEnabled);
+        public OutputModes OutputMode => this.Status.HasFlag(StatusBits.Ch1CVMode) ? OutputModes.Voltage : OutputModes.Current;
+        private StatusBits _Status = 0;
+        public StatusBits Status
+        {
+            get
+            {
+                StatusBits value = 0;
+                if (this.mutHandleData.WaitOne(TimeSpan.FromSeconds(5.0)))
+                {
+                    value = this._Status;
+                    this.mutHandleData.ReleaseMutex();
+                }
+                return value;
+            }
+            set
+            {
+                if (this.mutHandleData.WaitOne((TimeSpan.FromSeconds(5.0))))
+                {
+                    this._Status = value;
+                    this.mutHandleData.ReleaseMutex();
+                }
+                return;
+            }
+        }
         #endregion
         #region Instance Methods
         public Korad() : base()
         {
         }
-        public double GetVoltage()
+        public void GetVoltage()
         {
-            string text = this.Query(Korad.CMD_GETVOLTAGE);
-            double value = 0.0;
-            double.TryParse(text, out value);
-            return value;
+            this.Action = Actions.GetVoltage;
+            this.SendCommand(Korad.CMD_GETVOLTAGE);
+            return;
+        }
+        protected override void HandleData(int byte_count)
+        {
+            string text = null;
+            switch(this.Action)
+            {
+                default:
+                case Actions.None:
+                    break;
+                case Actions.GetStatus:
+                    text = this.GetText();
+                    int value = text != null && text.Length > 0 ? text[0] : 0;
+                    Console.WriteLine("Status: {0}", value);
+                    this.Status = (StatusBits)value;
+                    if (this.StatusUpdated != null)
+                        this.StatusUpdated();
+                    break;
+                case Actions.GetVoltage:
+                    if (byte_count < 5)
+                        return;
+                    text = this.GetText();
+                    double voltage = 0.0;
+                    double.TryParse(text, out voltage);
+                    this.CurrentVoltage = voltage;
+                    if (this.VoltageUpdated != null)
+                        this.VoltageUpdated(voltage);
+                    break;
+            }
+            this.Action = Actions.None;
         }
         public void Initialize()
         {
@@ -58,32 +144,31 @@ namespace KA3005P.Proxy
             this.SetOutputEnabled(false);
             return;
         }
-        public bool SetBeep(bool enabled)
+        public void SetBeep(bool enabled)
         {
             this.SendCommand(Korad.CMD_SETBEEP, (enabled ? 1 : 0).ToString());
             this.UpdateStatus();
-            return this.BeepEnabled;
+            return;
         }
-        public bool SetOutputEnabled(bool enabled)
+        public void SetOutputEnabled(bool enabled)
         {
             this.SendCommand(Korad.CMD_SETOUTPUTENABLE, (enabled ? 1 : 0).ToString());
             this.UpdateStatus();
-            return this.OutputEnabled;
+            return;
         }
-        public double SetVoltage(double value)
+        public void SetVoltage(double value)
         {
             value = Math.Max(Math.Min(value, this.MaximumVoltage), this.MinimumVoltage);
             string number = value.ToString("0#.##");
             this.SendCommand(Korad.CMD_SETVOLTAGE, number);
-            return this.GetVoltage();
+            this.GetVoltage();
+            return;
         }
         public void UpdateStatus()
         {
-            // TODO 08/16/16: there is an issue deciphering the status bits whenever OVP or OCP are enabled (OVP is worse)
-            string text = this.Query(Korad.CMD_GETSTATUS);
-            int value = text.Length > 0 ? text[0] : -1;
-            Console.WriteLine("Status: {0}", value);
-            this.statusBits = (StatusBits) (text == null ? 0 : text[0]);  
+            // TODO 08/16/16: there is an issue deciphering the status bits whenever OVP or OCP are enabled (OVP is worse)  
+            this.Action = Actions.GetStatus;
+            this.SendCommand(Korad.CMD_GETSTATUS);
             return;
         }
         #endregion

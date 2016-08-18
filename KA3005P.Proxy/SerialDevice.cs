@@ -28,58 +28,57 @@ namespace KA3005P.Proxy
             this.port = new SerialPort(port_name, 9600, Parity.None)
             {
                 DataBits = 8,
+                DiscardNull = true,
                 StopBits = StopBits.One,
+                RtsEnable = true
             };
             this.PortName = port_name;
             this.port.Open();
-            success = this.Validate();
-            if(!success)
+            this.SendCommand(SerialDevice.CMD_IDENTIFY);
+            string name = this.GetText();
+            success = this.Name == name;
+            if(success)
+                this.port.DataReceived += this.SerialPort_DataReceived;
+            else
                 this.Dispose();
             return success;
         }
+
+
         public void Dispose()
         {
             if (this.port?.IsOpen ?? false)
                 this.port.Close();
             return;
         }
-        public string Identify()
-        {
-            return this.Query(SerialDevice.CMD_IDENTIFY);
-        }
+        protected abstract void HandleData(int byte_count);
         public string GetText()
         {
-            return this.port.BytesToRead > 0 ? this.port.ReadExisting()?.TrimEnd(new char[] { '\0', ' ' }) : null;
-        }
-        public string Query(string text)
-        {
-            this.SendCommand(text);
-            string result = this.GetText();
-            System.Threading.Thread.Sleep(100);
-            return result;
+            string raw = this.port.BytesToRead > 0 ? this.port.ReadExisting() : null;
+            return raw?.TrimEnd(new char[] { '\0', ' ' });
         }
         public void SendCommand(string text)
         {
             this.port.Write(text);
+            // TODO 08/17/16: figure out how to get rid of these delays
             System.Threading.Thread.Sleep(100);
             return;
         }
         public void SendCommand(string format_string, params string[] values)
         {
             this.port.Write(string.Format(format_string, values));
+            // TODO 08/17/16: figure out how to get rid of these delays
             System.Threading.Thread.Sleep(100);
             return;
-        }
-        private bool Validate()
-        {
-            if (!this.port?.IsOpen ?? true)
-                return false;
-            string name = this.Identify();
-            return this.Name == name;
         }
         ~SerialDevice()
         {
             this.Dispose();
+        }
+        private void SerialPort_DataReceived(object sender, SerialDataReceivedEventArgs e)
+        {
+            this.HandleData(this.port.BytesToRead);
+            return;
         }
     }
 }
