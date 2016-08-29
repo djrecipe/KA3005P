@@ -6,6 +6,7 @@ namespace KA3005P.UI.Voltage
     /// <summary>
     /// Sequential list of time/voltage pairs
     /// </summary>
+    /// <seealso cref="VoltagePair"/>
     public class VoltageSeries : IEnumerator<VoltagePair>, IEnumerable<VoltagePair>
     {
         #region Instance Members

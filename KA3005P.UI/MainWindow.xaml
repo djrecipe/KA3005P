@@ -100,42 +100,20 @@
                         <Style>
                             <Style.Triggers>
                                 <DataTrigger Binding="{Binding VoltageOutputFileStatus}" Value="Disconnected">
+                                    <Setter Property="Button.Content" Value="Start"></Setter>
                                     <Setter Property="Button.IsEnabled" Value="false"></Setter>
                                 </DataTrigger>
                                 <DataTrigger Binding="{Binding VoltageOutputFileStatus}" Value="InvalidPath">
+                                    <Setter Property="Button.Content" Value="Start"></Setter>
                                     <Setter Property="Button.IsEnabled" Value="false"></Setter>
                                 </DataTrigger>
                                 <DataTrigger Binding="{Binding VoltageOutputFileStatus}" Value="IsOutputting">
-                                    <Setter Property="Button.IsEnabled" Value="false"></Setter>
-                                </DataTrigger>
-                                <DataTrigger Binding="{Binding VoltageOutputFileStatus}" Value="CanOutput">
-                                    <Setter Property="Button.IsEnabled" Value="true"></Setter>
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </Button.Style>
-                </Button>
-                <Button x:Name="btnVoltageFileStop" Content="Stop" Margin="10,5" Click="btnVoltageFileStop_Click" Grid.Column="2" Grid.Row="3" Padding="1" FontSize="12" FontWeight="Normal" BorderBrush="#FF9B9B9B" BorderThickness="2,1,1,1">
-                    <Button.Background>
-                        <RadialGradientBrush>
-                            <GradientStop Color="White"/>
-                            <GradientStop Color="#FFD9DBEC" Offset="1"/>
-                        </RadialGradientBrush>
-                    </Button.Background>
-                    <Button.Style>
-                        <Style>
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding VoltageOutputFileStatus}" Value="Disconnected">
-                                    <Setter Property="Button.IsEnabled" Value="false"></Setter>
-                                </DataTrigger>
-                                <DataTrigger Binding="{Binding VoltageOutputFileStatus}" Value="InvalidPath">
-                                    <Setter Property="Button.IsEnabled" Value="false"></Setter>
-                                </DataTrigger>
-                                <DataTrigger Binding="{Binding VoltageOutputFileStatus}" Value="IsOutputting">
+                                    <Setter Property="Button.Content" Value="Stop"></Setter>
                                     <Setter Property="Button.IsEnabled" Value="true"></Setter>
                                 </DataTrigger>
                                 <DataTrigger Binding="{Binding VoltageOutputFileStatus}" Value="CanOutput">
-                                    <Setter Property="Button.IsEnabled" Value="false"></Setter>
+                                    <Setter Property="Button.Content" Value="Start"></Setter>
+                                    <Setter Property="Button.IsEnabled" Value="true"></Setter>
                                 </DataTrigger>
                             </Style.Triggers>
                         </Style>
@@ -186,27 +164,41 @@
                     <ColumnDefinition Width="80"/>
                 </Grid.ColumnDefinitions>
                 <Label x:Name="lblOutputEnabled" Content="Output Enabled:" RenderTransformOrigin="-2.042,-4.239" VerticalContentAlignment="Center" Padding="0" FontSize="12" FontWeight="Normal" Margin="10,5"/>
-                <TextBox x:Name="txtOutputEnabled" IsEnabled="{Binding Connected}" Text="{Binding OutputEnabledStatus, Mode=OneWay}" Margin="10" TextWrapping="Wrap" Grid.Column="1" VerticalContentAlignment="Center" IsReadOnly="True" Padding="10,5" FontSize="12" FontWeight="Light">
+                <TextBox x:Name="txtOutputEnabled" IsEnabled="{Binding Connected}" Margin="10" TextWrapping="Wrap" Grid.Column="1" VerticalContentAlignment="Center" IsReadOnly="True" Padding="10,5" FontSize="12" FontWeight="Light">
                     <TextBox.Style>
                         <Style>
                             <Style.Triggers>
                                 <DataTrigger Binding="{Binding OutputEnabled}" Value="true">
                                     <Setter Property="TextBox.Background" Value="LightGreen"></Setter>
+                                    <Setter Property="TextBox.Text" Value="ENABLED"></Setter>
                                 </DataTrigger>
                                 <DataTrigger Binding="{Binding OutputEnabled}" Value="false">
                                     <Setter Property="TextBox.Background" Value="#FFDADADA"></Setter>
+                                    <Setter Property="TextBox.Text" Value="DISABLED"></Setter>
                                 </DataTrigger>
                             </Style.Triggers>
                         </Style>
                     </TextBox.Style>
                 </TextBox>
-                <Button x:Name="btnOutputEnabled" Content="{Binding OutputEnabledButtonText, Mode=OneWay}" IsEnabled="{Binding Connected, Mode=OneWay}" Margin="10" Click="btnOutputEnabled_Click" Grid.Column="2" Grid.RowSpan="2" FontSize="12" FontWeight="Normal" BorderBrush="#FF9B9B9B" BorderThickness="2,1,1,1">
+                <Button x:Name="btnOutputEnabled" IsEnabled="{Binding Connected, Mode=OneWay}" Margin="10" Click="btnOutputEnabled_Click" Grid.Column="2" Grid.RowSpan="2" FontSize="12" FontWeight="Normal" BorderBrush="#FF9B9B9B" BorderThickness="2,1,1,1">
                     <Button.Background>
                         <RadialGradientBrush>
                             <GradientStop Color="White" Offset="0"/>
                             <GradientStop Color="#FFD9DBEC" Offset="1"/>
                         </RadialGradientBrush>
                     </Button.Background>
+                    <Button.Style>
+                        <Style>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding OutputEnabled}" Value="true">
+                                    <Setter Property="Button.Content" Value="Turn Off"></Setter>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding OutputEnabled}" Value="false">
+                                    <Setter Property="Button.Content" Value="Turn On"></Setter>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
                 </Button>
             </Grid>
         </GroupBox>

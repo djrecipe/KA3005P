@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Threading;
@@ -14,7 +12,6 @@ namespace KA3005P.UI
     internal class MainWindowModel : INotifyPropertyChanged
     {
         #region Types
-
         internal enum VoltageOutputFileStatuses : uint
         {
             Disconnected = 0,
@@ -29,10 +26,14 @@ namespace KA3005P.UI
         private Korad korad = null;
         #endregion
         #region Instance Properties
+        /// <summary>
+        /// Serial device is connected
+        /// </summary>
         public bool Connected => this.korad != null;
+        /// <summary>
+        /// Serial device connection status
+        /// </summary>
         public string ConnectionStatusText => this.Connected ? string.Format("{0}, {1}", this.korad.Name, this.korad.PortName) : "Not Connected";
-        public string OutputEnabledButtonText => this.OutputEnabled ? "Turn Off" : "Turn On";
-        public string OutputEnabledStatus => this.OutputEnabled ? "ENABLED" : "DISABLED";
         public bool OutputEnabled
         {
             get
@@ -41,7 +42,8 @@ namespace KA3005P.UI
             }
             set
             {
-                this.korad?.SetOutputEnabled(value);               
+                this.korad?.SetOutputEnabled(value);
+                return;
             }
         }
         public string OutputModeText => this.korad?.OutputMode.ToString();
@@ -146,8 +148,6 @@ namespace KA3005P.UI
         private void Korad_StatusUpdated()
         {
             this.OnPropertyChanged("OutputEnabled");
-            this.OnPropertyChanged("OutputEnabledButtonText");
-            this.OnPropertyChanged("OutputEnabledStatus");
             this.OnPropertyChanged("OutputModeText");
         }
         private void Korad_VoltageUpdated(double value)

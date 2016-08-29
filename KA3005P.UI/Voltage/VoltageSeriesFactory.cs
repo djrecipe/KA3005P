@@ -3,12 +3,24 @@ using System.IO;
 
 namespace KA3005P.UI.Voltage
 {
+    /// <summary>
+    /// Creates voltage series
+    /// </summary>
+    /// <seealso cref="VoltageSeries"/>
     public class VoltageSeriesFactory
     {
+        #region Instance Methods
+        /// <summary>
+        /// Default constructor
+        /// </summary>
         public VoltageSeriesFactory()
         {
         }
-
+        /// <summary>
+        /// Create a voltage series using the file at the specified path
+        /// </summary>
+        /// <param name="path">Path to voltage series file</param>
+        /// <returns>Series of sequential time/voltage pairs</returns>
         public VoltageSeries Create(string path)
         {
             if (string.IsNullOrWhiteSpace(path))
@@ -37,5 +49,6 @@ namespace KA3005P.UI.Voltage
             }
             return series;
         }
+        #endregion
     }
 }

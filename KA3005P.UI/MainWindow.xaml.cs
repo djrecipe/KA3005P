@@ -41,7 +41,10 @@ namespace KA3005P.UI
         }
         private void btnVoltageFileStart_Click(object sender, RoutedEventArgs e)
         {
-            this.Model.StartVoltageFile();
+            if(this.Model.VoltageOutputFileStatus == MainWindowModel.VoltageOutputFileStatuses.IsOuputting)
+                this.Model.StopVoltageFile();
+            else
+                this.Model.StartVoltageFile();
             return;
         }
         private void btnVoltageFileStop_Click(object sender, RoutedEventArgs e)
