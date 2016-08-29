@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.25123.0
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KA3005P.UI", "KA3005P.UI\KA3005P.UI.csproj", "{46F5FB51-A88F-4D2F-83C4-4BF727E26118}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -14,6 +14,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KA3005P.Test", "KA3005P.Tes
 	ProjectSection(ProjectDependencies) = postProject
 		{977CB117-99BA-40C5-9848-38AA45CB22B3} = {977CB117-99BA-40C5-9848-38AA45CB22B3}
 		{46F5FB51-A88F-4D2F-83C4-4BF727E26118} = {46F5FB51-A88F-4D2F-83C4-4BF727E26118}
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{F9F0C8E4-0428-4663-8D1B-364C38949AE9}"
+	ProjectSection(SolutionItems) = preProject
+		SharedAssemblyInfo.cs = SharedAssemblyInfo.cs
 	EndProjectSection
 EndProject
 Global

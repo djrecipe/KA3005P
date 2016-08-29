@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO.Ports;
+using System.Threading;
 
 namespace KA3005P.Proxy
 {
@@ -11,6 +12,7 @@ namespace KA3005P.Proxy
         #endregion
         #region Instance Members
         private SerialPort port = null;
+        private readonly Mutex mutex = new Mutex(false, "KA3005P.Proxy.SerialDevice");
         #endregion
         #region Instance Properties
         public virtual string Name => null;
@@ -54,28 +56,41 @@ namespace KA3005P.Proxy
 
         public void Dispose()
         {
+            if (!this.mutex.WaitOne(5000))
+                throw new TimeoutException("Timeout waiting for serial device mutex");
             if (this.port?.IsOpen ?? false)
                 this.port.Close();
+            this.mutex.ReleaseMutex();
             return;
         }
         protected abstract void HandleData(int byte_count);
         public string GetText()
         {
+            if (!this.mutex.WaitOne(5000))
+                throw new TimeoutException("Timeout waiting for serial device mutex");
             string raw = this.port.BytesToRead > 0 ? this.port.ReadExisting() : null;
-            return raw?.TrimEnd(new char[] { '\0', ' ' });
+            this.mutex.ReleaseMutex();
+            string result = raw?.TrimEnd(new char[] { '\0', ' ' });
+            return result;
         }
         public void SendCommand(string text)
         {
+            if (!this.mutex.WaitOne(5000))
+                throw new TimeoutException("Timeout waiting for serial device mutex");
             this.port.Write(text);
             // TODO 08/17/16: figure out how to get rid of these delays
-            System.Threading.Thread.Sleep(100);
+            Thread.Sleep(100);
+            this.mutex.ReleaseMutex();
             return;
         }
         public void SendCommand(string format_string, params string[] values)
         {
+            if (!this.mutex.WaitOne(5000))
+                throw new TimeoutException("Timeout waiting for serial device mutex");
             this.port.Write(string.Format(format_string, values));
             // TODO 08/17/16: figure out how to get rid of these delays
-            System.Threading.Thread.Sleep(100);
+            Thread.Sleep(100);
+            this.mutex.ReleaseMutex();
             return;
         }
         ~SerialDevice()

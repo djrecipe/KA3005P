@@ -5,12 +5,12 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:KA3005P.UI"
         mc:Ignorable="d"
-        Title="Korad KA3005P Power Supply" Height="360" Width="393" Loaded="MainWindow_Loaded" Closing="MainWindow_Closing" ResizeMode="NoResize" Icon="Resources/multimeter.ico">
+        Title="Korad KA3005P Power Supply" Height="441.411" Width="393" Loaded="MainWindow_Loaded" Closing="MainWindow_Closing" ResizeMode="NoResize" Icon="Resources/multimeter.ico">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="40"/>
-            <RowDefinition Height="1.25*"/>
             <RowDefinition/>
+            <RowDefinition Height="0.5*"/>
             <RowDefinition Height="40"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
@@ -49,23 +49,123 @@
                 <Grid.RowDefinitions>
                     <RowDefinition/>
                     <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="120"/>
                     <ColumnDefinition/>
                     <ColumnDefinition Width="80"/>
                 </Grid.ColumnDefinitions>
-                <Label x:Name="lblCurrentVoltage" Content="Current Voltage:" RenderTransformOrigin="-2.042,-4.239" Margin="0,0,0,4.5" VerticalContentAlignment="Center" Padding="10,5" FontSize="12" FontWeight="Normal"/>
+                <Label x:Name="lblCurrentVoltage" Content="Current Voltage:" RenderTransformOrigin="-2.042,-4.239" VerticalContentAlignment="Center" Padding="10,5" FontSize="12" FontWeight="Normal" Margin="0"/>
                 <TextBox x:Name="txtSetVoltageValue" Margin="10,5" TextWrapping="Wrap" VerticalContentAlignment="Center" Grid.Column="1" Grid.Row="1" FontSize="12" FontWeight="Light" Padding="10,5"/>
-                <Label x:Name="lblSetVoltage" Content="Set Voltage:" RenderTransformOrigin="-2.042,-4.239" Margin="10,5,108,3" VerticalContentAlignment="Center" Padding="0" Grid.ColumnSpan="2" Grid.Row="1" FontSize="12" FontWeight="Normal"/>
-                <TextBox x:Name="txtCurrentVoltageValue" Text="{Binding Voltage, Mode=OneWay}" Margin="10,5" TextWrapping="Wrap" IsReadOnly="True" VerticalContentAlignment="Center" Background="#FFDADADA" Padding="10,5" Grid.Column="1" FontSize="12" FontWeight="Light"/>
-                <Button x:Name="btnSetVoltage" Content="Set" IsEnabled="{Binding Connected, Mode=OneWay}" Margin="10,5" Click="btnSetVoltage_Click" Grid.Column="2" Grid.Row="1" Padding="1" FontSize="12" FontWeight="Normal" BorderBrush="#FF9B9B9B" BorderThickness="2,1,1,1">
+                <Label x:Name="lblSetVoltage" Content="Set Voltage:" RenderTransformOrigin="-2.042,-4.239" Margin="0" VerticalContentAlignment="Center" Padding="10,5" Grid.Row="1" FontSize="12" FontWeight="Normal"/>
+                <TextBox x:Name="txtCurrentVoltageValue" IsEnabled="{Binding Connected}" Text="{Binding Voltage, Mode=OneWay}" Margin="10,5" TextWrapping="Wrap" IsReadOnly="True" VerticalContentAlignment="Center" Background="#FFDADADA" Padding="10,5" Grid.Column="1" FontSize="12" FontWeight="Light"/>
+                <Button x:Name="btnSetVoltage" Content="Set" Margin="10,5" Click="btnSetVoltage_Click" Grid.Column="2" Grid.Row="1" Padding="1" FontSize="12" FontWeight="Normal" BorderBrush="#FF9B9B9B" BorderThickness="2,1,1,1">
                     <Button.Background>
                         <RadialGradientBrush>
                             <GradientStop Color="White"/>
                             <GradientStop Color="#FFD9DBEC" Offset="1"/>
                         </RadialGradientBrush>
                     </Button.Background>
+                    <Button.Style>
+                        <Style>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding VoltageOutputFileStatus}" Value="VoltageOutputFileStatuses.Disconnected">
+                                    <Setter Property="Button.IsEnabled" Value="false"></Setter>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding VoltageOutputFileStatus}" Value="VoltageOutputFileStatuses.InvalidPath">
+                                    <Setter Property="Button.IsEnabled" Value="true"></Setter>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding VoltageOutputFileStatus}" Value="VoltageOutputFileStatuses.IsOutputting">
+                                    <Setter Property="Button.IsEnabled" Value="false"></Setter>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding VoltageOutputFileStatus}" Value="VoltageOutputFileStatuses.CanOutput">
+                                    <Setter Property="Button.IsEnabled" Value="true"></Setter>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
+                <TextBox x:Name="txtVoltageFilePath" Text="{Binding VoltageFilePath, Mode=OneWay}" Margin="10,5" TextWrapping="Wrap" IsReadOnly="True" VerticalContentAlignment="Center" Background="#FFDADADA" Padding="10,5" Grid.Column="1" FontSize="12" FontWeight="Light" Grid.Row="2"/>
+                <Label x:Name="lblVoltageFile" Content="Voltage File:" RenderTransformOrigin="-2.042,-4.239" VerticalContentAlignment="Center" Padding="10,5" Grid.Row="2" FontSize="12" FontWeight="Normal"/>
+                <Button x:Name="btnVoltageFileStart" Content="Start" IsEnabled="{Binding Connected, Mode=OneWay}" Margin="10,5" Click="btnVoltageFileStart_Click" Grid.Column="2" Grid.Row="2" Padding="1" FontSize="12" FontWeight="Normal" BorderBrush="#FF9B9B9B" BorderThickness="2,1,1,1">
+                    <Button.Background>
+                        <RadialGradientBrush>
+                            <GradientStop Color="White"/>
+                            <GradientStop Color="#FFD9DBEC" Offset="1"/>
+                        </RadialGradientBrush>
+                    </Button.Background>
+                    <Button.Style>
+                        <Style>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding VoltageOutputFileStatus}" Value="VoltageOutputFileStatuses.Disconnected">
+                                    <Setter Property="Button.IsEnabled" Value="false"></Setter>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding VoltageOutputFileStatus}" Value="VoltageOutputFileStatuses.InvalidPath">
+                                    <Setter Property="Button.IsEnabled" Value="false"></Setter>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding VoltageOutputFileStatus}" Value="VoltageOutputFileStatuses.IsOutputting">
+                                    <Setter Property="Button.IsEnabled" Value="false"></Setter>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding VoltageOutputFileStatus}" Value="VoltageOutputFileStatuses.CanOutput">
+                                    <Setter Property="Button.IsEnabled" Value="true"></Setter>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
+                <Button x:Name="btnVoltageFileStop" Content="Stop" IsEnabled="{Binding Connected, Mode=OneWay}" Margin="10,5" Click="btnVoltageFileStop_Click" Grid.Column="2" Grid.Row="3" Padding="1" FontSize="12" FontWeight="Normal" BorderBrush="#FF9B9B9B" BorderThickness="2,1,1,1">
+                    <Button.Background>
+                        <RadialGradientBrush>
+                            <GradientStop Color="White"/>
+                            <GradientStop Color="#FFD9DBEC" Offset="1"/>
+                        </RadialGradientBrush>
+                    </Button.Background>
+                    <Button.Style>
+                        <Style>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding VoltageOutputFileStatus}" Value="VoltageOutputFileStatuses.Disconnected">
+                                    <Setter Property="Button.IsEnabled" Value="false"></Setter>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding VoltageOutputFileStatus}" Value="VoltageOutputFileStatuses.InvalidPath">
+                                    <Setter Property="Button.IsEnabled" Value="false"></Setter>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding VoltageOutputFileStatus}" Value="VoltageOutputFileStatuses.IsOutputting">
+                                    <Setter Property="Button.IsEnabled" Value="true"></Setter>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding VoltageOutputFileStatus}" Value="VoltageOutputFileStatuses.CanOutput">
+                                    <Setter Property="Button.IsEnabled" Value="false"></Setter>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
+                <Button x:Name="btnVoltageFileBrowse" Content="Browse" IsEnabled="{Binding Connected, Mode=OneWay}" Margin="10,5,65,5" Click="btnVoltageFileBrowse_Click" Grid.Column="1" Grid.Row="3" Padding="1" FontSize="12" FontWeight="Normal" BorderBrush="#FF9B9B9B" BorderThickness="2,1,1,1">
+                    <Button.Background>
+                        <RadialGradientBrush>
+                            <GradientStop Color="White"/>
+                            <GradientStop Color="#FFD9DBEC" Offset="1"/>
+                        </RadialGradientBrush>
+                    </Button.Background>
+                    <Button.Style>
+                        <Style>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding VoltageOutputFileStatus}" Value="VoltageOutputFileStatuses.Disconnected">
+                                    <Setter Property="Button.IsEnabled" Value="false"></Setter>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding VoltageOutputFileStatus}" Value="VoltageOutputFileStatuses.InvalidPath">
+                                    <Setter Property="Button.IsEnabled" Value="true"></Setter>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding VoltageOutputFileStatus}" Value="VoltageOutputFileStatuses.IsOutputting">
+                                    <Setter Property="Button.IsEnabled" Value="false"></Setter>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding VoltageOutputFileStatus}" Value="VoltageOutputFileStatuses.CanOutput">
+                                    <Setter Property="Button.IsEnabled" Value="true"></Setter>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
                 </Button>
             </Grid>
         </GroupBox>
@@ -86,7 +186,7 @@
                     <ColumnDefinition Width="80"/>
                 </Grid.ColumnDefinitions>
                 <Label x:Name="lblOutputEnabled" Content="Output Enabled:" RenderTransformOrigin="-2.042,-4.239" VerticalContentAlignment="Center" Padding="0" FontSize="12" FontWeight="Normal" Margin="10,5"/>
-                <TextBox x:Name="txtOutputEnabled" Text="{Binding OutputEnabledStatus, Mode=OneWay}" Margin="10" TextWrapping="Wrap" Grid.Column="1" VerticalContentAlignment="Center" IsReadOnly="True" Padding="10,5" FontSize="12" FontWeight="Light">
+                <TextBox x:Name="txtOutputEnabled" IsEnabled="{Binding Connected}" Text="{Binding OutputEnabledStatus, Mode=OneWay}" Margin="10" TextWrapping="Wrap" Grid.Column="1" VerticalContentAlignment="Center" IsReadOnly="True" Padding="10,5" FontSize="12" FontWeight="Light">
                     <TextBox.Style>
                         <Style>
                             <Style.Triggers>

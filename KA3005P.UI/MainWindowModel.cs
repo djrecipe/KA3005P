@@ -1,13 +1,30 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.IO;
 using System.Runtime.CompilerServices;
+using System.Threading;
 using KA3005P.Proxy;
 using KA3005P.UI.Annotations;
+using KA3005P.UI.Voltage;
+using Microsoft.Win32;
 
 namespace KA3005P.UI
 {
     internal class MainWindowModel : INotifyPropertyChanged
     {
+        #region Types
+
+        internal enum VoltageOutputFileStatuses : uint
+        {
+            Disconnected = 0,
+            InvalidPath = 1,
+            CanOutput = 2,
+            IsOuputting = 3
+        }
+        #endregion
         #region Instance Members
+        private readonly BackgroundWorker workerVoltageFile = new BackgroundWorker();
         private readonly SerialDeviceFactory factory = new SerialDeviceFactory();
         private Korad korad = null;
         #endregion
@@ -39,12 +56,51 @@ namespace KA3005P.UI
                 this.korad?.SetVoltage(value);
             }
         }
+        private string _VoltageFilePath = null;
+        public string VoltageFilePath
+        {
+            get { return this._VoltageFilePath; }
+            set
+            {
+                this._VoltageFilePath = value;
+                this.OnPropertyChanged("VoltageFilePath");
+            }
+        }
+        public VoltageOutputFileStatuses VoltageOutputFileStatus
+        {
+            get
+            {
+                if(!this.Connected)
+                    return VoltageOutputFileStatuses.Disconnected;
+                if (string.IsNullOrWhiteSpace(this.VoltageFilePath) || !File.Exists(this.VoltageFilePath))
+                    return VoltageOutputFileStatuses.InvalidPath;
+                if (this.workerVoltageFile.IsBusy)
+                    return VoltageOutputFileStatuses.IsOuputting;
+                return VoltageOutputFileStatuses.CanOutput;
+            }   
+        }
         #endregion
         #region Instance Methods
         internal MainWindowModel()
         {
             this.factory.DeviceFound += this.SerialDeviceFactory_DeviceFound;
+            this.workerVoltageFile.DoWork += this.workerVoltageFile_DoWork;
+            this.workerVoltageFile.RunWorkerCompleted += this.workerVoltageFile_RunWorkerCompleted;
             this.ConnectKorad();
+        }
+
+
+        public void BrowseVoltageFile()
+        {
+            OpenFileDialog dialog = new OpenFileDialog()
+            {
+                Multiselect = false
+            };
+            if (dialog.ShowDialog() ?? false)
+            {
+                this.VoltageFilePath = dialog.FileName;
+            }
+            return;
         }
         public void ConnectKorad()
         {
@@ -56,6 +112,17 @@ namespace KA3005P.UI
                 this.OnPropertyChanged("ConnectionStatusText");
             }
             this.factory.Find<Korad>();
+            return;
+        }
+        public void StartVoltageFile()
+        {
+            this.workerVoltageFile.RunWorkerAsync(this.VoltageFilePath);
+            this.OnPropertyChanged("VoltageOutputFileStatus");
+            return;
+        }
+        public void StopVoltageFile()
+        {
+            this.workerVoltageFile.CancelAsync();
             return;
         }
         public void UpdateStatus()
@@ -98,6 +165,22 @@ namespace KA3005P.UI
                 this.korad.Initialize();
                 this.UpdateStatus();
             }
+            return;
+        }
+        private void workerVoltageFile_DoWork(object sender, DoWorkEventArgs e)
+        {
+            VoltageSeriesFactory factory = new VoltageSeriesFactory();
+            VoltageSeries series = factory.Create(e.Argument as string);
+            foreach (VoltagePair pair in series)
+            {
+                Thread.Sleep((int)(pair.Time * 1000.0));
+                this.korad.SetVoltage(pair.Voltage);
+            }
+            return;
+        }
+        private void workerVoltageFile_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            this.OnPropertyChanged("VoltageOutputFileStatus");
             return;
         }
         #endregion

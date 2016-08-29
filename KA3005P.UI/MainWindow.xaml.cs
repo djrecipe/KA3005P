@@ -34,6 +34,21 @@ namespace KA3005P.UI
             this.Model.OutputEnabled = !this.Model.OutputEnabled;
             return;
         }
+        private void btnVoltageFileBrowse_Click(object sender, RoutedEventArgs e)
+        {
+            this.Model.BrowseVoltageFile();
+            return;
+        }
+        private void btnVoltageFileStart_Click(object sender, RoutedEventArgs e)
+        {
+            this.Model.StartVoltageFile();
+            return;
+        }
+        private void btnVoltageFileStop_Click(object sender, RoutedEventArgs e)
+        {
+            this.Model.StopVoltageFile();
+            return;
+        }
         private void MainWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             this.Model.OutputEnabled = false;
