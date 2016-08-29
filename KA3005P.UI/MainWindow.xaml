@@ -71,16 +71,16 @@
                     <Button.Style>
                         <Style>
                             <Style.Triggers>
-                                <DataTrigger Binding="{Binding VoltageOutputFileStatus}" Value="VoltageOutputFileStatuses.Disconnected">
+                                <DataTrigger Binding="{Binding VoltageOutputFileStatus}" Value="Disconnected">
                                     <Setter Property="Button.IsEnabled" Value="false"></Setter>
                                 </DataTrigger>
-                                <DataTrigger Binding="{Binding VoltageOutputFileStatus}" Value="VoltageOutputFileStatuses.InvalidPath">
+                                <DataTrigger Binding="{Binding VoltageOutputFileStatus}" Value="InvalidPath">
                                     <Setter Property="Button.IsEnabled" Value="true"></Setter>
                                 </DataTrigger>
-                                <DataTrigger Binding="{Binding VoltageOutputFileStatus}" Value="VoltageOutputFileStatuses.IsOutputting">
+                                <DataTrigger Binding="{Binding VoltageOutputFileStatus}" Value="IsOutputting">
                                     <Setter Property="Button.IsEnabled" Value="false"></Setter>
                                 </DataTrigger>
-                                <DataTrigger Binding="{Binding VoltageOutputFileStatus}" Value="VoltageOutputFileStatuses.CanOutput">
+                                <DataTrigger Binding="{Binding VoltageOutputFileStatus}" Value="CanOutput">
                                     <Setter Property="Button.IsEnabled" Value="true"></Setter>
                                 </DataTrigger>
                             </Style.Triggers>
@@ -89,7 +89,7 @@
                 </Button>
                 <TextBox x:Name="txtVoltageFilePath" Text="{Binding VoltageFilePath, Mode=OneWay}" Margin="10,5" TextWrapping="Wrap" IsReadOnly="True" VerticalContentAlignment="Center" Background="#FFDADADA" Padding="10,5" Grid.Column="1" FontSize="12" FontWeight="Light" Grid.Row="2"/>
                 <Label x:Name="lblVoltageFile" Content="Voltage File:" RenderTransformOrigin="-2.042,-4.239" VerticalContentAlignment="Center" Padding="10,5" Grid.Row="2" FontSize="12" FontWeight="Normal"/>
-                <Button x:Name="btnVoltageFileStart" Content="Start" IsEnabled="{Binding Connected, Mode=OneWay}" Margin="10,5" Click="btnVoltageFileStart_Click" Grid.Column="2" Grid.Row="2" Padding="1" FontSize="12" FontWeight="Normal" BorderBrush="#FF9B9B9B" BorderThickness="2,1,1,1">
+                <Button x:Name="btnVoltageFileStart" Content="Start" Margin="10,5" Click="btnVoltageFileStart_Click" Grid.Column="2" Grid.Row="2" Padding="1" FontSize="12" FontWeight="Normal" BorderBrush="#FF9B9B9B" BorderThickness="2,1,1,1">
                     <Button.Background>
                         <RadialGradientBrush>
                             <GradientStop Color="White"/>
@@ -99,23 +99,23 @@
                     <Button.Style>
                         <Style>
                             <Style.Triggers>
-                                <DataTrigger Binding="{Binding VoltageOutputFileStatus}" Value="VoltageOutputFileStatuses.Disconnected">
+                                <DataTrigger Binding="{Binding VoltageOutputFileStatus}" Value="Disconnected">
                                     <Setter Property="Button.IsEnabled" Value="false"></Setter>
                                 </DataTrigger>
-                                <DataTrigger Binding="{Binding VoltageOutputFileStatus}" Value="VoltageOutputFileStatuses.InvalidPath">
+                                <DataTrigger Binding="{Binding VoltageOutputFileStatus}" Value="InvalidPath">
                                     <Setter Property="Button.IsEnabled" Value="false"></Setter>
                                 </DataTrigger>
-                                <DataTrigger Binding="{Binding VoltageOutputFileStatus}" Value="VoltageOutputFileStatuses.IsOutputting">
+                                <DataTrigger Binding="{Binding VoltageOutputFileStatus}" Value="IsOutputting">
                                     <Setter Property="Button.IsEnabled" Value="false"></Setter>
                                 </DataTrigger>
-                                <DataTrigger Binding="{Binding VoltageOutputFileStatus}" Value="VoltageOutputFileStatuses.CanOutput">
+                                <DataTrigger Binding="{Binding VoltageOutputFileStatus}" Value="CanOutput">
                                     <Setter Property="Button.IsEnabled" Value="true"></Setter>
                                 </DataTrigger>
                             </Style.Triggers>
                         </Style>
                     </Button.Style>
                 </Button>
-                <Button x:Name="btnVoltageFileStop" Content="Stop" IsEnabled="{Binding Connected, Mode=OneWay}" Margin="10,5" Click="btnVoltageFileStop_Click" Grid.Column="2" Grid.Row="3" Padding="1" FontSize="12" FontWeight="Normal" BorderBrush="#FF9B9B9B" BorderThickness="2,1,1,1">
+                <Button x:Name="btnVoltageFileStop" Content="Stop" Margin="10,5" Click="btnVoltageFileStop_Click" Grid.Column="2" Grid.Row="3" Padding="1" FontSize="12" FontWeight="Normal" BorderBrush="#FF9B9B9B" BorderThickness="2,1,1,1">
                     <Button.Background>
                         <RadialGradientBrush>
                             <GradientStop Color="White"/>
@@ -125,23 +125,23 @@
                     <Button.Style>
                         <Style>
                             <Style.Triggers>
-                                <DataTrigger Binding="{Binding VoltageOutputFileStatus}" Value="VoltageOutputFileStatuses.Disconnected">
+                                <DataTrigger Binding="{Binding VoltageOutputFileStatus}" Value="Disconnected">
                                     <Setter Property="Button.IsEnabled" Value="false"></Setter>
                                 </DataTrigger>
-                                <DataTrigger Binding="{Binding VoltageOutputFileStatus}" Value="VoltageOutputFileStatuses.InvalidPath">
+                                <DataTrigger Binding="{Binding VoltageOutputFileStatus}" Value="InvalidPath">
                                     <Setter Property="Button.IsEnabled" Value="false"></Setter>
                                 </DataTrigger>
-                                <DataTrigger Binding="{Binding VoltageOutputFileStatus}" Value="VoltageOutputFileStatuses.IsOutputting">
+                                <DataTrigger Binding="{Binding VoltageOutputFileStatus}" Value="IsOutputting">
                                     <Setter Property="Button.IsEnabled" Value="true"></Setter>
                                 </DataTrigger>
-                                <DataTrigger Binding="{Binding VoltageOutputFileStatus}" Value="VoltageOutputFileStatuses.CanOutput">
+                                <DataTrigger Binding="{Binding VoltageOutputFileStatus}" Value="CanOutput">
                                     <Setter Property="Button.IsEnabled" Value="false"></Setter>
                                 </DataTrigger>
                             </Style.Triggers>
                         </Style>
                     </Button.Style>
                 </Button>
-                <Button x:Name="btnVoltageFileBrowse" Content="Browse" IsEnabled="{Binding Connected, Mode=OneWay}" Margin="10,5,65,5" Click="btnVoltageFileBrowse_Click" Grid.Column="1" Grid.Row="3" Padding="1" FontSize="12" FontWeight="Normal" BorderBrush="#FF9B9B9B" BorderThickness="2,1,1,1">
+                <Button x:Name="btnVoltageFileBrowse" Content="Browse" Margin="10,5,65,5" Click="btnVoltageFileBrowse_Click" Grid.Column="1" Grid.Row="3" Padding="1" FontSize="12" FontWeight="Normal" BorderBrush="#FF9B9B9B" BorderThickness="2,1,1,1">
                     <Button.Background>
                         <RadialGradientBrush>
                             <GradientStop Color="White"/>
@@ -151,16 +151,16 @@
                     <Button.Style>
                         <Style>
                             <Style.Triggers>
-                                <DataTrigger Binding="{Binding VoltageOutputFileStatus}" Value="VoltageOutputFileStatuses.Disconnected">
+                                <DataTrigger Binding="{Binding VoltageOutputFileStatus}" Value="Disconnected">
                                     <Setter Property="Button.IsEnabled" Value="false"></Setter>
                                 </DataTrigger>
-                                <DataTrigger Binding="{Binding VoltageOutputFileStatus}" Value="VoltageOutputFileStatuses.InvalidPath">
+                                <DataTrigger Binding="{Binding VoltageOutputFileStatus}" Value="InvalidPath">
                                     <Setter Property="Button.IsEnabled" Value="true"></Setter>
                                 </DataTrigger>
-                                <DataTrigger Binding="{Binding VoltageOutputFileStatus}" Value="VoltageOutputFileStatuses.IsOutputting">
+                                <DataTrigger Binding="{Binding VoltageOutputFileStatus}" Value="IsOutputting">
                                     <Setter Property="Button.IsEnabled" Value="false"></Setter>
                                 </DataTrigger>
-                                <DataTrigger Binding="{Binding VoltageOutputFileStatus}" Value="VoltageOutputFileStatuses.CanOutput">
+                                <DataTrigger Binding="{Binding VoltageOutputFileStatus}" Value="CanOutput">
                                     <Setter Property="Button.IsEnabled" Value="true"></Setter>
                                 </DataTrigger>
                             </Style.Triggers>

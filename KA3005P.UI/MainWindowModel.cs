@@ -108,9 +108,10 @@ namespace KA3005P.UI
             {
                 this.korad.Dispose();
                 this.korad = null;
-                this.OnPropertyChanged("Connected");
-                this.OnPropertyChanged("ConnectionStatusText");
             }
+            this.OnPropertyChanged("Connected");
+            this.OnPropertyChanged("ConnectionStatusText");
+            this.OnPropertyChanged("VoltageOutputFileStatus");
             this.factory.Find<Korad>();
             return;
         }
@@ -158,6 +159,7 @@ namespace KA3005P.UI
             this.korad = device as Korad;
             this.OnPropertyChanged("Connected");
             this.OnPropertyChanged("ConnectionStatusText");
+            this.OnPropertyChanged("VoltageOutputFileStatus");
             if (this.korad != null)
             {
                 this.korad.StatusUpdated += this.Korad_StatusUpdated;
