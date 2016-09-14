@@ -6,6 +6,9 @@
         xmlns:local="clr-namespace:KA3005P.UI"
         mc:Ignorable="d"
         Title="Korad KA3005P Power Supply" Height="441.411" Width="393" Loaded="MainWindow_Loaded" Closing="MainWindow_Closing" ResizeMode="NoResize" Icon="Resources/multimeter.ico">
+    <Window.Background>
+        <SolidColorBrush Color="#FFE9EBF0"/>
+    </Window.Background>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="40"/>

@@ -24,6 +24,7 @@ namespace KA3005P.UI
         private readonly BackgroundWorker workerVoltageFile = new BackgroundWorker();
         private readonly SerialDeviceFactory factory = new SerialDeviceFactory();
         private Korad korad = null;
+        private Settings settings = new Settings();
         #endregion
         #region Instance Properties
         /// <summary>
@@ -58,13 +59,12 @@ namespace KA3005P.UI
                 this.korad?.SetVoltage(value);
             }
         }
-        private string _VoltageFilePath = null;
         public string VoltageFilePath
         {
-            get { return this._VoltageFilePath; }
+            get { return this.settings.General.Rows[0]?["VoltageFilePath"] as string; }
             set
             {
-                this._VoltageFilePath = value;
+                this.settings.General.Rows[0]["VoltageFilePath"] = value;
                 this.OnPropertyChanged("VoltageFilePath");
             }
         }
@@ -81,16 +81,39 @@ namespace KA3005P.UI
                 return VoltageOutputFileStatuses.CanOutput;
             }   
         }
+
+        public double WindowLeft
+        {
+            get { return (double)this.settings.General.Rows[0]?["WindowLeft"]; }
+            set
+            {
+                this.settings.General.Rows[0]["WindowLeft"] = value;
+            }
+        }
+        public double WindowTop
+        {
+            get { return (double)this.settings.General.Rows[0]?["WindowTop"]; }
+            set
+            {
+                this.settings.General.Rows[0]["WindowTop"] = value;
+            }
+        }
         #endregion
         #region Instance Methods
         internal MainWindowModel()
         {
+            this.settings.Load();
+            this.OnPropertyChanged("VoltageFilePath");
             this.factory.DeviceFound += this.SerialDeviceFactory_DeviceFound;
             this.workerVoltageFile.DoWork += this.workerVoltageFile_DoWork;
             this.workerVoltageFile.RunWorkerCompleted += this.workerVoltageFile_RunWorkerCompleted;
             this.ConnectKorad();
         }
-
+        ~MainWindowModel()
+        {
+            this.settings.Save();
+            return;
+        }
 
         public void BrowseVoltageFile()
         {

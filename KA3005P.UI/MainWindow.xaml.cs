@@ -18,6 +18,8 @@ namespace KA3005P.UI
         {
             this.Model = new MainWindowModel();
             this.DataContext = this.Model;
+            this.Left = this.Model.WindowLeft;
+            this.Top = this.Model.WindowTop;
         }
 
         private void btnSetVoltage_Click(object sender, RoutedEventArgs e)
@@ -47,14 +49,11 @@ namespace KA3005P.UI
                 this.Model.StartVoltageFile();
             return;
         }
-        private void btnVoltageFileStop_Click(object sender, RoutedEventArgs e)
-        {
-            this.Model.StopVoltageFile();
-            return;
-        }
         private void MainWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             this.Model.OutputEnabled = false;
+            this.Model.WindowLeft = this.Left;
+            this.Model.WindowTop = this.Top;
             return;
         }
 
@@ -69,6 +68,5 @@ namespace KA3005P.UI
             this.Model.ConnectKorad();
             return;
         }
-
     }
 }
