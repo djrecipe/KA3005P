@@ -37,6 +37,8 @@ namespace KA3005P.UI {
             base.Tables.CollectionChanged += schemaChangedHandler;
             base.Relations.CollectionChanged += schemaChangedHandler;
             this.EndInit();
+
+            this.InitializeRows();
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
